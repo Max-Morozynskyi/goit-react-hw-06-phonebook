@@ -12,6 +12,7 @@ export const App = () => {
     { id: 'id-4', name: 'Porkey Pig', number: '227-91-26' },
   ];
   const [filter, setFilter] = useState('');
+
   const [contacts, setContacts] = useState(() => {
     return JSON.parse(localStorage.getItem('contacts')) ?? initialContacts;
   });
