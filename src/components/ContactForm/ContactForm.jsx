@@ -1,10 +1,14 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import css from './ContactForm.module.css';
+import { createContact } from 'redux/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
 
-export const ContactForm = ({ onSubmit }) => {
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts).map(a => a.name.toLowerCase());
 
   const registerTapping = evt => {
     const { name, value } = evt.currentTarget;
@@ -15,7 +19,6 @@ export const ContactForm = ({ onSubmit }) => {
       case 'number':
         setNumber(value);
         break;
-
       default:
         break;
     }
@@ -23,7 +26,12 @@ export const ContactForm = ({ onSubmit }) => {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    onSubmit(name, number);
+    const newContact = { name, number };
+    if (contacts.includes(name.toLowerCase())) {
+      alert(`${name} is already in your contacts!`);
+      return;
+    }
+    dispatch(createContact(newContact));
     setName('');
     setNumber('');
   };
@@ -63,8 +71,4 @@ export const ContactForm = ({ onSubmit }) => {
       </button>
     </form>
   );
-};
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 };
